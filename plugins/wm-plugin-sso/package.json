@@ -1,0 +1,87 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "wm-plugin-sso",
+        "scope": null,
+        "escapedName": "wm-plugin-sso",
+        "name": "wm-plugin-sso",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "C:\\Users\\vn0x53q\\Documents\\myNode\\app\\node_modules"
+    ]
+  ],
+  "_from": "wm-plugin-sso@latest",
+  "_id": "wm-plugin-sso@1.6.1",
+  "_inCache": true,
+  "_location": "/wm-plugin-sso",
+  "_nodeVersion": "7.10.1",
+  "_npmUser": {
+    "name": "awhelms",
+    "email": "awhelms@wal-mart.com"
+  },
+  "_npmVersion": "4.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "wm-plugin-sso",
+    "scope": null,
+    "escapedName": "wm-plugin-sso",
+    "name": "wm-plugin-sso",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://npme.walmart.com/wm-plugin-sso/-/wm-plugin-sso-1.6.1.tgz",
+  "_shasum": "f7970d8b2f84d29e6e4188f66a6855e3d842c73f",
+  "_shrinkwrap": null,
+  "_spec": "wm-plugin-sso",
+  "_where": "C:\\Users\\vn0x53q\\Documents\\myNode\\app\\node_modules",
+  "author": {
+    "name": "awhelms"
+  },
+  "cordova": {
+    "id": "wm-plugin-sso",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "Walmart Single Sign-On",
+  "devDependencies": {},
+  "dist": {
+    "shasum": "f7970d8b2f84d29e6e4188f66a6855e3d842c73f",
+    "tarball": "http://npme.walmart.com/wm-plugin-sso/-/wm-plugin-sso-1.6.1.tgz"
+  },
+  "keywords": [
+    "sso",
+    "login",
+    "user",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "ISC",
+  "maintainers": [
+    {
+      "name": "awhelms",
+      "email": "awhelms@wal-mart.com"
+    }
+  ],
+  "name": "wm-plugin-sso",
+  "optionalDependencies": {},
+  "readme": "# Single Sign On - Cordova\n\n## Installation\nSet up your npm to use the internal registry.\n\n```sh\ncordova plugin add wm-plugin-sso\n```\n\nSee additional notes for iOS and Android near the end of this document.\n\n## Overview\nThe purpose of this plugin is to allow multiple applications on the same device to know what user is currently signed in.  It also provides a common login screen to be used across all applications.  The basic flow is:\n\n- App calls getUser() *probably on startup*\n\t- If there is a user signed in\n\t\t- The success function will get called immediately with the user info.\n\t- If there is not a user signed in\n\t\t- A login prompt will be shown\n\t\t- The user enters their credentials\n\t\t- Once the user is authenticated, the success function is called with the user info\n\n- User clicks a link/button to sign out\n\t- The app calls signOutUser()\n\t- The user's authentication token is invalidated on the device\n\nThe plugin will also listen for \"resume\" events from Cordova and call getUser() automatically.  If the user info changes for some reason, it will fire a \"userChanged\" event with a list of fields that changed.  This is meant to handle the scenario where:\n \n- User 1 opens App A and signs in through SSO\n- User 1 later opens App B which gets the user's info from SSO\n- User 1 signs out of App B and leaves for the day\n- User 2 picks up device and signs in to App B\n- User 2 later opens App A\n\t- App A receives userChanged event with User 2 info and reacts accordingly\n\n## API\nOnce cordova is ready, there will be an object in global scope (window) called wmSSO.  *NOTE: the API functions now support Promises!*\n\n#### wmSSO\nThe JavaScript interface object for single sign on.\n\n##### .getUser(success, error)\nGets the currently signed-in user or prompts for a login\n\n* success(user) - callback function once the user is retrieved.\n* error(msg) - callback function if unable to get the user.\n\nThe user object will have these properties.\n\n* userId - the userid of the user\n* siteId - the store/club/dc number the user entered on login (if applicable)\n* domain - the domain the user entered on login\n* subDomain - the sub domain the user entered on login (only applies to \"dc\" domain)\n* countryCode - the country the user entered on login\n* token - the token returned by the server.  This can be used with service calls on the mobile-services domain.\n* changedFields - an array of the field names that changed since the last login.  may contain one or more of the above listed field names\n* additional - an object containing additional data about the user\n    * displayName - the display name (typically first & last) for the user (v1.2+).\n    * mailId - the email address of the user (v1.2+).\n\n```JavaScript\ndocument.addEventListener(\"deviceready\", function() {\n    // cordova should be ready now\n\n    if (window.wmSSO) {\n        wmSSO.getUser(function(newUser) {\n             console.log(\"User signed in!\", newUser);\n        }, function(msg) {\n             console.error(\"Error getting user\", msg);\n        });\n    }\n});\n```\n\nExample using promises\n\n```JavaScript\ndocument.addEventListener(\"deviceready\", function() {\n    // cordova should be ready now\n\n    if (window.wmSSO) {\n    \twmSSO.getUser().then(function(newUser) {\n    \t\tconsole.log(\"User signed in!\", newUser);\n    \t}, function(msg) {\n    \t\tconsole.error(\"error getting user\", msg);\n    \t});\n    }\n});\n```\n\n##### .signOutUser(success, error)\nSigns out the currently signed-in user.  This will not automatically prompt for a login upon completion.\n\n* success - callback function when the user has been signed out\n* error(msg) - callback function when an error occurred\n\n```JavaScript\ndocument.getElementById(\"signOutButton\")\n    .addEventListener(\"click\", function() {\n        wmSSO.signOutUser(function() {\n\n           console.log(\"User signed out\");\n\n           // let's go ahead and prompt for a new user\n           wmSSO.getUser(successFunc, errorFunc);\n\n        }, function(msg) {\n            console.error(\"Error signing out user\", msg);\n        });\n    });\n```\n\n#### Events\nThe plugin will also check for a logged in user on app resume (when the app returns to the foreground).  If a user is logged in and has used two apps, then logs out of one, when the user resumes the second app, it will also prompt for login.\n\nOn resume, if the plugin detects that the user info has changed, it will fire an event on the document called \"userChanged\" with the new user info.  The user info will also contain the \"changedFields\" array with the list of field names in the user object that changed.  See getUser().\n\n```JavaScript\ndocument.addEventListener(\"userChanged\", userChanged, false);\n\nfunction userChanged(event) {\n    console.log(\"user changed\", event.newUser);\n    restartApp();\n}\n```\n\n## Project Setup and Deployment\n\n### iOS\nAfter you add the platform for iOS using cordova, you will have to open the project in Xcode and change some project settings.  Your app will have to be part of the Wal-Mart provisioning profile and include the entitlement for the app group.  If this is not done, your app will still function, but it will use its own sign on and token and not participate with other apps.\n\n* Target\n  * General\n    * Identity\n      * Team: Wal-Mart Stores, Inc.\n    * Deployment Info\n      * 8.0 or greater\n    * Embedded Binaries\n      * Add WMSSO.framework\n  * Capabilities\n    * App Groups (ON)\n      * Checkmark group.com.walmart\n  * Build Settings\n    * Apple LLVM 7.0 - Language - Modules\n      * Enable Modules - set to Yes\n\nYou should see a file suffixed \".entitlements\" after you add the group.\n\n### Android\nPrior to deploying to a device, the Walmart Single Sign On android app must be installed on the device.  When building your app for production, you must sign the apk with the same key that is used to sign the Walmart Single Sign On app.  If this is not done, the single sign on plugin will not work, and your app may crash with an exception.\n\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://gecgithub01.walmart.com/StoreSystemsMobility/SingleSignOn.git"
+  },
+  "scripts": {},
+  "version": "1.6.1"
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+      id="wm-plugin-sso"
+      version="1.6.1">
+    <name>WM-SSO</name>
+    <description>Walmart Single Sign-On</description>
+    <license></license>
+    <keywords>sso,login,user</keywords>
+    <repo></repo>
+    <issue></issue>
+
+    <js-module src="www/wmSSO.js" name="wmSSO">
+    	<clobbers target="wmSSO" />
+    </js-module>
+    <js-module src="www/promise.js" name="Promise">
+    </js-module>
+       
+    <!-- android -->
+    <platform name="android">    	
+        <hook type="after_plugin_install" src="scripts/androidAddGradleProxy.js" />
+        <hook type="after_plugin_install" src="scripts/androidAddEnterpriseSigning.js" />
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WM-SSO">
+                <param name="android-package" value="com.walmart.sso.plugin.WMLoginPlugin"/>
+            </feature>
+        </config-file>
+		
+        <source-file src="src/android/plugin/WMLoginPlugin.java" 
+        	target-dir="src/com/walmart/sso/plugin" />
+
+        <framework src="src/android/build-extras.gradle" custom="true" type="gradleReference" />        
+        
+    </platform>
+
+    <platform name="ios">
+        <hook type="after_plugin_install" src="scripts/iosAddSSOFramework.js" />
+
+        <config-file target="config.xml" parent="/*">
+            <feature name="WM-SSO">
+                <param name="ios-package" value="WMLoginPlugin" /> 
+            </feature>
+        </config-file>
+        
+
+        <header-file src="src/ios/plugin/WMLoginPlugin.h" />
+        <source-file src="src/ios/plugin/WMLoginPlugin.m" />
+
+        <framework src="src/ios/support/WMSSO.framework" custom="true" embed="true" />
+    </platform>
+</plugin>

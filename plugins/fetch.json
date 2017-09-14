@@ -1,0 +1,10 @@
+{
+    "wm-plugin-sso": {
+        "source": {
+            "type": "registry",
+            "id": "wm-plugin-sso"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}

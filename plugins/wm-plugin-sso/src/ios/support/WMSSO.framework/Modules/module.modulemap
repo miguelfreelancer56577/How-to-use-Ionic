@@ -1,0 +1,6 @@
+framework module WMSSO {
+  umbrella header "WMSSO.h"
+
+  export *
+  module * { export * }
+}
