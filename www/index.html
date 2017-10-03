@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
+﻿<!DOCTYPE html>
+<html ng-app="starter">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
@@ -11,7 +11,6 @@
     <!-- IF using Sass (run gulp sass first), then remove the CSS include above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
-
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -20,15 +19,222 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-  </head>
 
-  <body ng-app="starter">
+    <style>
+        .col {
+            border: 1px solid red;
+        }
+    </style>
+
+</head>
+
+<body ng-controller="MainCtrl">
     <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content class="has-header">
-      </ion-content>
-    </ion-pane>
-  </body>
+        <ion-header-bar class="bar-positive">
+            <h1 class="title">Ionic Blank Starter</h1>
+        </ion-header-bar>
+        <ion-content class="has-header padding">
+
+                
+            <a href="javascript:" ng-repeat="r in
+ratingArr" class="padding" style="text-decoration:none;">
+                <i class="icon {{r.icon}}"
+                   ng-click="setRating(r.value)"></i>
+            </a>
+
+            <hr />
+
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input type="email" ng-model="email">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input type="password" ng-model="password"
+                           ng-minlength="3">
+                </label>
+                <div class="padding">
+                    <button ng-disabled="!email || !password"
+                            class="button button-block button-positive">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col">col-33%-auto</div>
+                <div class="col">col-33%-auto</div>
+                <div class="col">col-33%-auto</div>
+            </div>
+            <div class="row">
+                <div class="col col-offset-33">col-33%-offset</div>
+                <div class="col">col-25%-auto</div>
+            </div>
+            <div class="row">
+                <div class="col col-top">.col-top</div>
+                <div class="col col-center">.col-center</div>
+                <div class="col col-bottom">.col-bottom</div>
+                <div class="col">
+                    1
+                    <br>2
+                    <br>3
+                    <br>4
+                </div>
+            </div>
+
+            <button class="button icon-left ion-star button-balanced">
+                Icon Button
+            </button>
+
+            <ul class="list">
+                <li class="item">
+                    Item 1
+                </li>
+                <li class="item">
+                    Item 2
+                </li>
+                <li class="item">
+                    Item 3
+                </li>
+            </ul>
+
+            <div class="list card">
+                <div class="item text-center">
+                    <h1>Today's Weather</h1>
+                </div>
+                <div class="item item-body">
+                    <p>
+                        <div class="text-center">
+                            <i class="icon ion-ios-partlysunny"
+                               style="font-size:128px"></i>
+                        </div>
+                        <div class="text-center">
+                            <h2>Partly Sunny</h2>
+                        </div>
+                    </p>
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-thumbsup"></i> Like
+                    </a>
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-chatbox"></i> Comment
+                    </a>
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-share"></i> Share
+                    </a>
+                </div>
+            </div>
+
+            <div class="list">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Username</span>
+                    <input type="text" placeholder="Username">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Password</span>
+                    <input type="password" placeholder="Password">
+                </label>
+            </div>
+
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" placeholder="Search...">
+                </label>
+            </div>
+
+            <div class="list">
+                <label class="item item-input">
+                    <textarea placeholder="This is a &lt;textarea&gt;&lt;/textarea&gt;"></textarea>
+                </label>
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        Gender
+                    </div>
+                    <select>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </label>
+            </div>
+
+            <ul class="list">
+                <li class="item item-checkbox">
+                    <label class="checkbox checkbox-assertive">
+                        <input type="checkbox">
+                    </label>
+                    Apples
+                </li>
+                <li class="item item-checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    Oranges
+                </li>
+                <li class="item item-checkbox checkbox-energized">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    Lemons
+                </li>
+            </ul>
+
+            <ul class="list">
+                <li class="item item-toggle">
+                    Wifi
+                    <label class="toggle toggle-assertive">
+                        <input type="checkbox">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </li>
+                <li class="item item-toggle">
+                    Bluetooth
+                    <label class="toggle toggle-positive">
+                        <input type="checkbox">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </li>
+                <li class="item item-toggle">
+                    Aeroplane Mode
+                    <label class="toggle toggle-calm">
+                        <input type="checkbox">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+
+            <div class="list">
+                <div class="item range range-positive">
+                    <i class="icon ion-ios-sunny-outline"></i>
+                    <input type="range" name="volume" min="0" max="100"
+                           value="33">
+                    <i class="icon ion-ios-sunny"></i>
+                </div>
+            </div>
+
+            <hr />
+
+
+
+            <br /><br /><br />
+
+        </ion-content>
+
+                <ion-footer-bar class="bar-assertive">
+                    <div class="title">Footer</div>
+                </ion-footer-bar>
+
+            </ion-pane>
+</body>
 </html>
+
